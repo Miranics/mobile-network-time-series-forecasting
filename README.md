@@ -2,6 +2,55 @@
 
 Comparative time series analysis and forecasting of large-scale mobile network traffic using statistical and deep learning models.
 
+## Assignment Scope
+
+This project implements the full workflow requested in the coursework:
+
+- Task 1: memory-efficient large data handling and transformation
+- Task 2: exploratory time series and spatial characterization
+- Task 3: one statistical model (SARIMA) + two neural models (LSTM, GRU)
+
+## Recommended Workflow (Hybrid)
+
+Use local resources for data engineering and EDA, then move long deep-learning runs to GPU.
+
+- Local now:
+  - data loading
+  - memory optimization
+  - parquet conversion
+  - EDA and stationarity checks
+- Kaggle or Colab later:
+  - repeated LSTM training
+  - repeated GRU training
+  - heavy hyperparameter tuning
+
+## Quick Start
+
+1. Create and activate your environment.
+2. Install dependencies.
+3. Build optimized parquet from raw txt files.
+
+```bash
+./run.sh install
+./run.sh local-prep
+```
+
+## Run Notebooks
+
+```bash
+./run.sh notebook
+```
+
+## Core Modules
+
+- `src/data/loader.py`: chunked loading of TIM telecom files
+- `src/data/memory_utils.py`: dtype downcasting and memory reporting
+- `src/data/preprocessing.py`: aggregation and feature-ready subsets
+- `src/data/parquet_converter.py`: CLI conversion and optimization stats
+- `src/analysis/*.py`: EDA, stationarity, decomposition, anomalies, spatial analysis
+- `src/models/*.py`: SARIMA, LSTM, GRU, metrics, and training utilities
+- `src/visualization/*.py`: plots for EDA and forecast overlays
+
 ## Project Objectives
 
 This project focuses on:
@@ -38,6 +87,8 @@ data/           -> raw and processed datasets
 - TensorFlow
 - Scikit-learn
 - Matplotlib
+- Seaborn
+- PyArrow
 
 ## Author
 
