@@ -15,6 +15,30 @@ def collect_telecom_files(raw_dir: Path) -> list[Path]:
 	return files
 
 
+def expected_telecom_filenames(
+	start_date: str = "2013-11-01",
+	end_date: str = "2013-12-31",
+) -> list[str]:
+	date_range = pd.date_range(start=start_date, end=end_date, freq="D")
+	return [f"sms-call-internet-mi-{d.strftime('%Y-%m-%d')}.txt" for d in date_range]
+
+
+def report_missing_telecom_files(
+	raw_dir: Path,
+	start_date: str = "2013-11-01",
+	end_date: str = "2013-12-31",
+) -> dict[str, object]:
+	expected = expected_telecom_filenames(start_date=start_date, end_date=end_date)
+	existing = {p.name for p in raw_dir.glob("sms-call-internet-mi-*.txt")}
+	missing = [name for name in expected if name not in existing]
+	return {
+		"expected": len(expected),
+		"present": len(existing),
+		"missing": len(missing),
+		"missing_files": missing,
+	}
+
+
 def build_city_traffic_dataframe(raw_dir: Path, chunksize: int = 2_000_000) -> pd.DataFrame:
 	files = collect_telecom_files(raw_dir)
 	aggregated_frames: list[pd.DataFrame] = []

@@ -69,6 +69,17 @@ This project focuses on:
 
 The dataset is based on the Telecom Italia Mobile (TIM) dataset for the city of Milan.
 
+### Data Download Checklist
+
+- Download the Telecommunications activity dataset from Harvard Dataverse.
+- Place daily files into data/raw/telecom.
+- Expected full coverage is daily files from 2013-11-01 to 2013-12-31 (61 files).
+- Use the preprocessing notebook to report missing files before heavy runs.
+
+References:
+- https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/EGZHFV
+- https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/QJWLFU
+
 ## Project Structure
 
 ```text
