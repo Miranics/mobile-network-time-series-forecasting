@@ -4,9 +4,11 @@ import argparse
 from pathlib import Path
 
 import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 from src.data.memory_utils import compare_memory, optimize_dtypes
-from src.data.preprocessing import build_city_traffic_dataframe, save_city_parquet
+from src.data.loader import load_telecom_files
 from src.utils.config import get_config
 from src.utils.timer import Timer
 
@@ -54,16 +56,29 @@ def main() -> None:
 
 	before_mb, after_mb, reduction_pct = _memory_probe(files[0])
 
+	args.output.parent.mkdir(parents=True, exist_ok=True)
+	if args.output.exists():
+		args.output.unlink()
+
 	with Timer("parquet_conversion") as t:
-		city_df = build_city_traffic_dataframe(args.raw_dir, chunksize=args.chunksize)
-		save_city_parquet(city_df, args.output)
+		writer = None
+		row_count = 0
+		for chunk in load_telecom_files(files, chunksize=args.chunksize, to_datetime=True):
+			# Each row is already aggregated per square/time interval in the raw dataset.
+			table = pa.Table.from_pandas(chunk, preserve_index=False)
+			if writer is None:
+				writer = pq.ParquetWriter(str(args.output), table.schema, compression="snappy")
+			writer.write_table(table)
+			row_count += len(chunk)
+		if writer is not None:
+			writer.close()
 
 	print("=== Memory Optimization Probe (sample) ===")
 	print(f"Before optimization: {before_mb:.2f} MB")
 	print(f"After optimization:  {after_mb:.2f} MB")
 	print(f"Reduction:           {reduction_pct:.2f}%")
 	print("=== Conversion ===")
-	print(f"Rows written: {len(city_df):,}")
+	print(f"Rows written: {row_count:,}")
 	print(f"Output file:  {args.output}")
 	print(f"Elapsed:      {t.elapsed_seconds:.2f} s")
 
