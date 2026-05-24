@@ -16,7 +16,7 @@ def rolling_statistics(series: pd.Series, window: int = 144) -> pd.DataFrame:
 
 def adf_test(series: pd.Series) -> dict[str, float]:
 	clean = series.dropna()
-	stat, pvalue, used_lag, nobs, _, critical_values = adfuller(clean)
+	stat, pvalue, used_lag, nobs, critical_values, _ = adfuller(clean)
 	out: dict[str, float] = {
 		"adf_stat": float(stat),
 		"p_value": float(pvalue),
