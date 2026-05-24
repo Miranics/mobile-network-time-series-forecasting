@@ -1,0 +1,8 @@
+=== Memory Optimization Probe (sample) ===
+Before optimization: 6.87 MB
+After optimization:  4.01 MB
+Reduction:           41.67%
+=== Conversion ===
+Rows written: 319,896,289
+Output file:  /home/nanen-miracle-mbanaade/ML Code/mobile-network-time-series-forecasting/data/processed/city_traffic.parquet
+Elapsed:      338.59 s
